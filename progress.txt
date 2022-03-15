@@ -1,0 +1,3 @@
+Build upload function
+Build .json file handler
+Perform some sample calculations for the uploaded information
