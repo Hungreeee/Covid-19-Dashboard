@@ -1,20 +1,9 @@
-import scalafx.Includes._
 import scalafx.application.JFXApp
-import scalafx.beans.property.ObjectProperty
-import scalafx.collections.ObservableBuffer
-import scalafx.embed.swing.SwingFXUtils
 import scalafx.scene.Scene
-import scalafx.scene.canvas.Canvas
-import scalafx.scene.chart.{LineChart, NumberAxis, XYChart}
-import scalafx.scene.control._
-import scalafx.scene.layout.{GridPane, Pane, VBox}
-import scalafx.scene.paint.Color._
-import scalafx.scene.text.Font
-import scalafx.stage.{FileChooser, Stage}
-import scalafx.scene.layout.CornerRadii
+import scalafx.scene.layout.GridPane
 import scalafx.scene.layout.ColumnConstraints
 import scalafx.scene.layout.RowConstraints
-import scalafx.geometry.{Orientation, Pos}
+import scalafx.geometry.Orientation
 import scalafx.scene.control.SplitPane
 
 object Main extends JFXApp {
@@ -37,6 +26,7 @@ object Main extends JFXApp {
   val diagramContainer = new SplitPane()
   diagramContainer.getItems.addAll(uploader, table)
   diagramContainer.orientation = Orientation.Horizontal
+
   val container = new SplitPane()
   container.getItems.addAll(diagram, diagramContainer)
   container.orientation = Orientation.Vertical
