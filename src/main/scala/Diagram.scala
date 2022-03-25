@@ -1,6 +1,5 @@
 import scalafx.Includes.observableList2ObservableBuffer
 import scalafx.collections.ObservableBuffer
-import scalafx.scene.chart.{NumberAxis, XYChart}
 import scalafx.scene.control._
 import scalafx.scene.layout.{Background, BackgroundFill, CornerRadii, HBox, VBox}
 import scalafx.scene.paint.Color._
@@ -9,11 +8,9 @@ import scalafx.geometry.{Insets, Pos}
 import scalafx.stage.Screen
 import scalafx.scene.chart._
 import scalafx.util.Duration
-import scalafx.scene.chart.PieChart
 import scalafx.scene.control.Tooltip
 import scalafx.scene.effect.DropShadow
 import scalafx.scene.paint.Color
-
 
 class Diagram(data: Seq[Tuple4[String, Int, Int, Int]], date: String) extends VBox {
   def getDate = date
@@ -267,17 +264,17 @@ class PieChartModel(data: Seq[Tuple4[String, Int, Int, Int]]) extends VBox {
   this.children = pie
   pie.setTitle("Pie Chart")
   pie.setData(pieChartData)
-  pie.setPrefHeight(390)
-  pie.setMinHeight(390)
-  pie.setMaxHeight(390)
+  pie.setPrefHeight(400)
+  pie.setMinHeight(400)
+  pie.setMaxHeight(400)
 
-  pie.setPrefWidth(390)
-  pie.setMinWidth(390)
-  pie.setMaxWidth(390)
+  pie.setPrefWidth(400)
+  pie.setMinWidth(400)
+  pie.setMaxWidth(400)
 
-  pie.setPrefSize(390, 390)
-  pie.setMinSize(390, 390)
-  pie.setMaxSize(390, 390)
+  pie.setPrefSize(400, 400)
+  pie.setMinSize(400, 400)
+  pie.setMaxSize(400, 400)
   pie.setLabelsVisible(false)
   pie.getData.foreach(total += _.getPieValue)
 
@@ -298,7 +295,7 @@ class PieChartModel(data: Seq[Tuple4[String, Int, Int, Int]]) extends VBox {
 class ColumnPlotModel(data: Seq[Tuple4[String, Int, Int, Int]]) extends VBox {
   val sumCasesArr = data.map(_._2)
   val sumDeathsArr = data.map(_._3)
-  val datesArr = ObservableBuffer() ++ data.map(_._1)
+  val datesArr = ObservableBuffer() ++ data.map(_._1).map(i => i.substring(0, 6) + i.substring(8, 10))
 
   val xAxis = new CategoryAxis()
   xAxis.setCategories(datesArr)
@@ -345,23 +342,24 @@ class ColumnPlotModel(data: Seq[Tuple4[String, Int, Int, Int]]) extends VBox {
         }
       )
     })
-  barChart.setPrefHeight(390)
-  barChart.setMinHeight(390)
-  barChart.setMaxHeight(390)
+  barChart.setPrefHeight(400)
+  barChart.setMinHeight(400)
+  barChart.setMaxHeight(400)
 
-  barChart.setPrefWidth(390)
-  barChart.setMinWidth(390)
-  barChart.setMaxWidth(390)
+  barChart.setPrefWidth(400)
+  barChart.setMinWidth(400)
+  barChart.setMaxWidth(400)
 
-  barChart.setPrefSize(390, 390)
-  barChart.setMinSize(390, 390)
-  barChart.setMaxSize(390, 390)
+  barChart.setPrefSize(400, 400)
+  barChart.setMinSize(400, 400)
+  barChart.setMaxSize(400, 400)
 }
 
 class ScatterPlotModel(data: Seq[Tuple4[String, Int, Int, Int]]) extends VBox {
   val sumCasesArr = data.map(_._2)
   val sumDeathsArr = data.map(_._3)
-  val datesArr = ObservableBuffer() ++ data.map(_._1)
+  val datesArr = ObservableBuffer() ++ data.map(_._1).map(i => i.substring(0, 6) + i.substring(8, 10))
+  // val datesArr =ObservableBuffer("F1", "F2", "F3", "F4", "F5", "F6", "F7") 01/02/0220
 
   val xAxis = new CategoryAxis()
   xAxis.setCategories(datesArr)
@@ -378,7 +376,6 @@ class ScatterPlotModel(data: Seq[Tuple4[String, Int, Int, Int]]) extends VBox {
   series1.getData.add(XYChart.Data(datesArr(4), sumCasesArr(4)))
   series1.getData.add(XYChart.Data(datesArr(5), sumCasesArr(5)))
   series1.getData.add(XYChart.Data(datesArr(6), sumCasesArr(6)))
-
   val series2 = new XYChart.Series[String, Number]()
   series2.setName("Death cases")
   series2.getData.add(XYChart.Data(datesArr.head, sumDeathsArr.head))
@@ -408,17 +405,17 @@ class ScatterPlotModel(data: Seq[Tuple4[String, Int, Int, Int]]) extends VBox {
         }
       )
     })
-  scatterChart.setPrefHeight(390)
-  scatterChart.setMinHeight(390)
-  scatterChart.setMaxHeight(390)
+  scatterChart.setPrefHeight(400)
+  scatterChart.setMinHeight(400)
+  scatterChart.setMaxHeight(400)
 
-  scatterChart.setPrefWidth(390)
-  scatterChart.setMinWidth(390)
-  scatterChart.setMaxWidth(390)
+  scatterChart.setPrefWidth(400)
+  scatterChart.setMinWidth(400)
+  scatterChart.setMaxWidth(400)
 
-  scatterChart.setPrefSize(390, 390)
-  scatterChart.setMinSize(390, 390)
-  scatterChart.setMaxSize(390, 390)
+  scatterChart.setPrefSize(400, 400)
+  scatterChart.setMinSize(400, 400)
+  scatterChart.setMaxSize(400, 400)
 }
 
 class ControlContainer extends VBox {

@@ -1,4 +1,4 @@
-import Main.{diagram, stage, table}
+import Main.{diagram, stage, table, saver}
 import scalafx.scene.control._
 import scalafx.scene.layout.{Background, BackgroundFill, Border, BorderStroke, BorderStrokeStyle, BorderWidths, CornerRadii, HBox, VBox}
 import scalafx.scene.paint.Color._
@@ -8,30 +8,46 @@ import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.control.TextField
 import scalafx.scene.effect.DropShadow
 import scalafx.scene.paint.Color
+import java.io.{File, FileOutputStream, PrintWriter}
+import scala.collection.mutable
 
 
 class FileHandler() extends VBox {
   val label = new Label("")
+  val labelWarn1 = new Label("Please note that the program will only display the 7-day interval saved in the file")
+  val labelWarn2 = new Label("Some functionality will not be available as they no longer make sense")
   val uploadButton = new Button("Upload file")
   val hideButton = new Button("Hide")
   val showButton = new Button("Show")
   var dateChoose = new dateChooser(Seq[Tuple4[String, Int, Int, Int]]())
   val contentContainer = new VBox()
   val buttonContainer = new HBox()
+  val labelContainer = new VBox()
 
   dateChoose.visible = false
   label.visible = false
+  saver.visible = false
 
-  contentContainer.children = Array(uploadButton, label, dateChoose, hideButton)
+  buttonContainer.children = Array(uploadButton)
+  labelContainer.children = label
+  contentContainer.children = Array(buttonContainer, labelContainer, dateChoose, hideButton)
   this.children = Array(contentContainer)
 
   contentContainer.alignment = Pos.Center
+  labelContainer.alignment = Pos.Center
   contentContainer.spacing = 10
   this.alignment = Pos.Center
+  labelContainer.spacing = 5
   contentContainer.minWidth = Screen.primary.visualBounds.width / 3
   contentContainer.minHeight = Screen.primary.visualBounds.height / 2.8
+  buttonContainer.alignment = Pos.Center
+  buttonContainer.spacing = 10
 
   label.setFont(Font.font("", FontWeight.Bold, 10))
+  labelWarn1.setFont(Font.font("", FontWeight.Medium, 10))
+  labelWarn1.setTextFill(Color.Gray)
+  labelWarn2.setFont(Font.font("", FontWeight.Medium, 10))
+  labelWarn2.setTextFill(Color.Gray)
 
   val dropShadow = new DropShadow()
   dropShadow.setRadius(5.0)
@@ -78,33 +94,57 @@ class FileHandler() extends VBox {
     val fileChooser = new FileChooser
     val file = fileChooser.showOpenDialog(stage)
     if (file != null) {
-      uploadButton.text = "Upload a different version of the file"
+      uploadButton.text = "Upload a different file"
       val filePath = file.getCanonicalPath
       val fileName = filePath.reverse.takeWhile(_ != '\\').reverse
       label.text = "Uploaded file : " + fileName
       val checkBox = new CheckBox("TestBox")
       if(filePath.endsWith(".json")) {
         val data = new FileReader(filePath)
+        buttonContainer.children = Array(uploadButton, saver)
+        labelContainer.children = label
         diagram.children = new Diagram(data.getData.reverse, "06/09/2021")
         table.children = new DataTable(data.getData.reverse, "06/09/2021")
+        saver.children = new FileSaver(data.getData.reverse, "06/09/2021")
         dateChoose.children = new dateChooser(data.getData.reverse)
         dateChoose.visible = true
         diagram.visible = true
+        saver.visible = true
         label.visible = true
         table.visible = true
       }
+      else if(filePath.endsWith(".hihi")) {
+        val data = new CustomFileReader(filePath)
+        val displayData = data.getData
+        if(displayData.size == 7) {
+          val displayDate = displayData.head._1
+          buttonContainer.children = Array(uploadButton)
+          diagram.children = new Diagram(displayData, displayDate)
+          table.children = new DataTable(displayData, displayDate)
+          label.setText("Displaying Dashboard saved in file " + fileName)
+          labelContainer.children = Array(label, labelWarn1, labelWarn2)
+          dateChoose.visible = false
+          saver.visible = false
+          diagram.visible = true
+          label.visible = true
+          table.visible = true
+        }
+        else {
+          labelContainer.children = label
+          label.text = "File " + fileName + " is not appropriate! Please upload another file"
+          label.visible = true
+        }
+      }
       else {
-        label.text = "File " + fileName + " is not appropriate! Please upload .json file only"
+        labelContainer.children = label
+        label.text = "File " + fileName + " is not appropriate! Please only upload .json or .hihi file"
         label.visible = true
       }
     }
   }
   // styles
-
   uploadButton.minHeight = 45
-  uploadButton.minWidth = 200
-  uploadButton.layoutX = 200
-  uploadButton.layoutY = 350
+  uploadButton.minWidth = 130
   uploadButton.setBackground(new Background(Array(new BackgroundFill(Color.Orange, new CornerRadii(0), Insets(0)))))
   uploadButton.setTextFill(Color.White)
   uploadButton.setFont(Font.font("", FontWeight.Bold, 12))
@@ -168,6 +208,7 @@ class dateChooser(data: Seq[Tuple4[String, Int, Int, Int]]) extends VBox {
     else {
       diagram.children = new Diagram(data, formatDate)
       table.children = new DataTable(data, formatDate)
+      saver.children = new FileSaver(data, formatDate)
       errorLabel.setTextFill(Color.Black)
       errorLabel.text = "End date: " + this.get7Day(formatDate)
       errorLabel.setFont(Font.font("", FontWeight.Bold, 10))
@@ -222,5 +263,53 @@ class FileReader(filePath: String) {
       } )
   }
   def getData = extractedData
+}
+
+class CustomFileReader(filePath: String) {
+  var extractedData = Seq[Tuple4[String, Int, Int, Int]]()
+  if(filePath != "") {
+    val file = scala.io.Source.fromFile(filePath)
+    var linesInFile = file.getLines.toSeq
+      .map(i => i.replaceAll(" ", ""))
+      .filterNot(_ == "")
+    for(i <- linesInFile.indices by 4) {
+      extractedData = extractedData :+ Tuple4(linesInFile(i), linesInFile(i+1).toInt, linesInFile(i+2).toInt, linesInFile(i+3).toInt)
+    }
+  }
+  def getData = extractedData
+}
+
+class FileSaver(data: Seq[Tuple4[String, Int, Int, Int]], date: String) extends Button {
+  this.minHeight = 45
+  this.minWidth = 130
+  this.setBackground(new Background(Array(new BackgroundFill(Color.Orange, new CornerRadii(0), Insets(0)))))
+  this.setTextFill(Color.White)
+  this.setFont(Font.font("", FontWeight.Bold, 12))
+  this.onMouseEntered = (e) => {
+    this.setBackground(new Background(Array(new BackgroundFill(Color.White, new CornerRadii(0), Insets(0)))))
+    this.setTextFill(Color.Black)
+  }
+  this.onMouseExited = (e) => {
+    this.setBackground(new Background(Array(new BackgroundFill(Color.Orange, new CornerRadii(0), Insets(0)))))
+    this.setTextFill(Color.White)
+  }
+  val displayedDate = data.slice(data.map(_._1).indexOf(date), data.map(_._1).indexOf(date)+7)
+  this.setText("Save current dashboard state")
+  this.onAction = (e) => {
+    val fileChooser = new FileChooser
+    fileChooser.setTitle("Save diagram's current state")
+    fileChooser.setInitialFileName(date.replaceAll("/", "") + "Dashboard")
+    fileChooser.getExtensionFilters.addAll(new FileChooser.ExtensionFilter("Hihi file", "*.hihi"))
+    val file = fileChooser.showSaveDialog(stage)
+
+    if(file != null) {
+    val fileContent = mutable.Buffer[String]()
+    val printWriter = new PrintWriter(new FileOutputStream(new File(file.getCanonicalPath)))
+      for(i <- displayedDate) {
+        printWriter.write(i._1 + "\n" + i._2.toString + "\n" + i._3.toString + "\n" + i._4.toString + "\n")
+      }
+      printWriter.close()
+    }
+  }
 }
 

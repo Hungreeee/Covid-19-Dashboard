@@ -1,9 +1,7 @@
 import scalafx.application.JFXApp
 import scalafx.scene.Scene
-import scalafx.scene.layout.GridPane
-import scalafx.scene.layout.ColumnConstraints
-import scalafx.scene.layout.RowConstraints
-import scalafx.geometry.Orientation
+import scalafx.scene.layout.{ColumnConstraints, GridPane, HBox, Pane, RowConstraints, VBox}
+import scalafx.geometry.{Orientation, Pos}
 import scalafx.scene.control.SplitPane
 
 object Main extends JFXApp {
@@ -16,12 +14,22 @@ object Main extends JFXApp {
   stage.setResizable(false)
   stage.setMaximized(true)
 
-  lazy val diagram = new Diagram(Seq[Tuple4[String, Int, Int, Int]](), "06/09/2021")
-  lazy val table = new DataTable(Seq[Tuple4[String, Int, Int, Int]](), "06/09/2021")
-  val uploader = new FileHandler
+  lazy val diagram = new VBox()
+  diagram.children = new Diagram(Seq[Tuple4[String, Int, Int, Int]](), "06/09/2021")
+  lazy val table = new VBox()
+  table.children = new DataTable(Seq[Tuple4[String, Int, Int, Int]](), "06/09/2021")
+  val uploader = new VBox()
+  uploader.children = new FileHandler
+  lazy val saver = new HBox()
+  saver.children = new FileSaver(Seq[Tuple4[String, Int, Int, Int]](), "06/09/2021")
 
   diagram.visible = false
   table.visible = false
+
+  diagram.alignment = Pos.Center
+  table.alignment = Pos.Center
+  uploader.alignment = Pos.Center
+  saver.alignment = Pos.Center
 
   val diagramContainer = new SplitPane()
   diagramContainer.getItems.addAll(uploader, table)

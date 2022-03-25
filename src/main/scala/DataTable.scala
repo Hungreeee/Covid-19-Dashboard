@@ -88,8 +88,9 @@ class DataTable(data: Seq[Tuple4[String, Int, Int, Int]], date: String) extends 
     val maxCasesLabel = new SmallCards("Maximum confirmed", displayedDate.map(i => i._2).max.toString)
     val minDeathsLabel = new SmallCards("Minimum death", displayedDate.map(i => i._3).min.toString)
     val maxDeathsLabel = new SmallCards("Maximum death", displayedDate.map(i => i._3).max.toString)
-    val casesSD = new SmallCards("Std deviation confirmed", ((Math.round(Math.sqrt(displayedDate.map(i => Math.pow(i._2-averageCasesVal, 2)).sum/7))*100.0)/100.0).toString)
-    val deathSD = new SmallCards("Std deviation death", ((Math.round(Math.sqrt(displayedDate.map(i => Math.pow(i._3-averageDeathsVal, 2)).sum/7))*100.0)/100.0).toString)
+
+    val casesSD = new SmallCards("Std deviation confirmed", (Math.round(Math.sqrt(displayedDate.map(i => Math.pow(i._2.toDouble - averageCasesVal, 2.0)).sum/7.0)*100.00)/100.00).toString)
+    val deathSD = new SmallCards("Std deviation death", (Math.round(Math.sqrt(displayedDate.map(i => Math.pow(i._3.toDouble - averageDeathsVal, 2.0)).sum/7.0)*100.00)/100.00).toString)
 
     cardsContainer.spacing = 10
 
