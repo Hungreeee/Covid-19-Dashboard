@@ -11,6 +11,9 @@ import scalafx.util.Duration
 import scalafx.scene.control.Tooltip
 import scalafx.scene.effect.DropShadow
 import scalafx.scene.paint.Color
+import scalafx.Includes._
+import scalafx.scene.Node
+
 
 class Diagram(data: Seq[Tuple4[String, Int, Int, Int]], date: String) extends VBox {
   def getDate = date
@@ -280,7 +283,7 @@ class PieChartModel(data: Seq[Tuple4[String, Int, Int, Int]]) extends VBox {
 
   pie.getData.foreach(
     d => {
-      val sliceNode = d.getNode
+      val sliceNode:Node = d.getNode
       var pieValue = d.getPieValue
       val percent = (pieValue/total)*100.0
       val msg = "%s: %.2f (%.2f%%)".format(d.getName, pieValue, percent)
@@ -331,7 +334,7 @@ class ColumnPlotModel(data: Seq[Tuple4[String, Int, Int, Int]]) extends VBox {
     d => {
       d.getData.foreach(
         i => {
-          val barNode = i.getNode
+          val barNode:Node = i.getNode
           var barValue:Double = i.getYValue.toString.toDouble
           val msg = "%s: %.2f".format(d.getName, barValue)
           val tt = new Tooltip {
@@ -394,7 +397,7 @@ class ScatterPlotModel(data: Seq[Tuple4[String, Int, Int, Int]]) extends VBox {
     d => {
       d.getData.foreach(
         i => {
-          val barNode = i.getNode
+          val barNode:Node = i.getNode
           var barValue:Double = i.getYValue.toString.toDouble
           val msg = "%s: %.2f".format(d.getName, barValue)
           val tt = new Tooltip {

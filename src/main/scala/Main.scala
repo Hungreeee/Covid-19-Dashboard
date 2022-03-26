@@ -1,6 +1,6 @@
 import scalafx.application.JFXApp
 import scalafx.scene.Scene
-import scalafx.scene.layout.{ColumnConstraints, GridPane, HBox, Pane, RowConstraints, VBox}
+import scalafx.scene.layout.{ColumnConstraints, GridPane, HBox, RowConstraints, VBox}
 import scalafx.geometry.{Orientation, Pos}
 import scalafx.scene.control.SplitPane
 
