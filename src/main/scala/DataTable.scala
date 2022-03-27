@@ -190,24 +190,11 @@ class SmallCards(title: String, text: String) extends VBox {
           CornerRadii.Empty, new BorderWidths(5), Insets.Empty)))
 
   this.children = Array(textLabel, titleLabel)
-//  this.onMouseClicked = (e) => {
-//    this.setBorder(new Border(new BorderStroke(Color.Orange, Color.Orange, Color.Orange, Color.Orange,
-//            BorderStrokeStyle.Solid, BorderStrokeStyle.Solid, BorderStrokeStyle.Solid, BorderStrokeStyle.Solid,
-//            CornerRadii.Empty, new BorderWidths(5), Insets.Empty)))
-//    this.setEffect(dropShadow)
-//    this.setBackground(new Background(Array(new BackgroundFill(Color.Orange, new CornerRadii(0), Insets(0)))))
-//    titleLabel.setText("Lorem ipsum")
 //  }
   this.onMouseEntered = (e) => {
-//    this.setBorder(new Border(new BorderStroke(Color.White, Color.White, Color.White, Color.Orange,
-//            BorderStrokeStyle.Solid, BorderStrokeStyle.Solid, BorderStrokeStyle.Solid, BorderStrokeStyle.Solid,
-//            CornerRadii.Empty, new BorderWidths(5), Insets.Empty)))
     this.setEffect(dropShadow)
   }
   this.onMouseExited = (e) => {
-//    this.setBorder(new Border(new BorderStroke(Color.White, Color.White, Color.White, Color.White,
-//            BorderStrokeStyle.Solid, BorderStrokeStyle.Solid, BorderStrokeStyle.Solid, BorderStrokeStyle.Solid,
-//            CornerRadii.Empty, new BorderWidths(5), Insets.Empty)))
     this.setEffect(clearShadow)
   }
 }
