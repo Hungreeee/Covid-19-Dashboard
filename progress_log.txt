@@ -1,3 +1,4 @@
+It is pretty much done. This is how the program should be operated:
 You can upload 
 +) .json files ("COVID files for testing" folder) 
 +) .hihi files (This will be created by the program in order to save the current state of the 
@@ -19,5 +20,4 @@ Everything from .json is avaiable but
 +) The ability to save the current state of the dashboard (Why? The current state of the program IS the uploaded file)
 These functions will not be available, as they no longer make sense.
 
-
-Yeah, this is it. Thank you for your time. 
+All functions have been tested. They work as expected. 
