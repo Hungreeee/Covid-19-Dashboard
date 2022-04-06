@@ -14,6 +14,7 @@ object Main extends JFXApp {
   stage.setResizable(false)
   stage.setMaximized(true)
 
+  // initiate components
   lazy val diagram = new VBox()
   diagram.children = new Diagram(Seq[Tuple4[String, Int, Int, Int]](), "06/09/2021")
   lazy val table = new VBox()
@@ -26,6 +27,7 @@ object Main extends JFXApp {
   diagram.visible = false
   table.visible = false
 
+  // add splitpane to components
   diagram.alignment = Pos.Center
   table.alignment = Pos.Center
   uploader.alignment = Pos.Center
@@ -41,6 +43,7 @@ object Main extends JFXApp {
 
   root.add(container, 0, 0)
 
+  // align components
   val column0 = new ColumnConstraints
   val row0 = new RowConstraints
 

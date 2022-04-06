@@ -5,8 +5,8 @@ version := "0.1"
 scalaVersion := "2.13.8"
 
 libraryDependencies += "org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.4"
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.9"
-libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.9"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.11"
+libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.11"
 libraryDependencies += "org.scala-lang.modules" %% "scala-swing" % "3.0.0"
 
 libraryDependencies += "org.scalafx" %% "scalafx" % "14-R19"
@@ -20,3 +20,5 @@ lazy val javaFXModules = Seq("base", "controls", "fxml", "graphics", "media", "s
 libraryDependencies ++= javaFXModules.map( m =>
   "org.openjfx" % s"javafx-$m" % "14.0.1" classifier osName
 )
+
+scalacOptions ++= Seq("-deprecation", "-feature")

@@ -14,34 +14,28 @@ import scalafx.scene.paint.Color
 import scalafx.Includes._
 import scalafx.scene.Node
 
-
 class Diagram(data: Seq[Tuple4[String, Int, Int, Int]], date: String) extends VBox {
-  def getDate = date
-  this.alignment = Pos.Center
+  // if data is valid
   if(data.nonEmpty) {
+    // initiate components
     val hideButton = new Button("Hide")
     val showButton = new Button("Show")
-
     val contentContainer = new HBox()
     val container = new VBox()
-
     val displayedDate = data.slice(data.map(_._1).indexOf(date), data.map(_._1).indexOf(date)+7)
     val title = new Label("Diagrams displaying data from " + date + " to " + data.map(_._1).apply(data.map(_._1).indexOf(date) + 6)+ (if(date == "06/09/2021") " (Default)" else ""))
-
     val pieChartContainer = new PieChartModel(displayedDate)
     val scatterPlotContainer = new ScatterPlotModel(displayedDate)
     val columnPlotContainer = new ColumnPlotModel(displayedDate)
-
     val graphContainer = new HBox()
-
     val controlTitle = new Label("Diagram Controller")
     val controlContainer = new ControlContainer()
     val slot1Container = new SlotCard("Slot 1")
     val slot2Container = new SlotCard("Slot 2")
     val slot3Container = new SlotCard("Slot 3")
-
     val titleContainer = new HBox()
-    titleContainer.children = title
+
+    // style, link and align components
     titleContainer.setBackground(new Background(Array(new BackgroundFill(Color.Orange, new CornerRadii(0), Insets(0)))))
     titleContainer.setPadding(Insets(10, 10, 10, 30))
     title.setTextFill(Color.White)
@@ -49,24 +43,27 @@ class Diagram(data: Seq[Tuple4[String, Int, Int, Int]], date: String) extends VB
     controlTitle.setFont(Font.font("", FontWeight.Bold, 16))
 
     graphContainer.alignment = Pos.Center
-    graphContainer.spacing = 20
     container.alignment = Pos.Center
+    this.alignment = Pos.Center
+    contentContainer.alignment = Pos.Center
+    controlContainer.alignment = Pos.TopCenter
     container.spacing = 20
     contentContainer.spacing = 20
-    contentContainer.alignment = Pos.Center
     controlContainer.spacing = 20
-    controlContainer.alignment = Pos.TopCenter
+    graphContainer.spacing = 20
     graphContainer.minWidth = Screen.primary.visualBounds.width / 1.2
     graphContainer.maxWidth  = Screen.primary.visualBounds.width / 1.2
     graphContainer.prefWidth = Screen.primary.visualBounds.width / 1.2
 
+    titleContainer.children = title
     controlContainer.children = Array(controlTitle, slot1Container, slot2Container, slot3Container)
     graphContainer.children = Array(pieChartContainer, scatterPlotContainer, columnPlotContainer)
     contentContainer.children = Array(controlContainer, graphContainer)
     container.children = Array(titleContainer, contentContainer, hideButton)
     this.children = container
 
-    // Ugly code ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    // Diagram controller--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    // Initiate components
     val showPie1 = new CustomButton("Show pie chart")
     val showPie2 = new CustomButton("Show pie chart")
     val showPie3 = new CustomButton("Show pie chart")
@@ -88,6 +85,8 @@ class Diagram(data: Seq[Tuple4[String, Int, Int, Int]], date: String) extends VB
     val slotTitle1 = new Label("Slot 1")
     val slotTitle2 = new Label("Slot 2")
     val slotTitle3 = new Label("Slot 3")
+
+    // style, link and create event hanlder for buttons in the Controller
     slotTitle1.setFont(Font.font("", FontWeight.Bold, 12))
     slotTitle2.setFont(Font.font("", FontWeight.Bold, 12))
     slotTitle3.setFont(Font.font("", FontWeight.Bold, 12))
@@ -190,6 +189,8 @@ class Diagram(data: Seq[Tuple4[String, Int, Int, Int]], date: String) extends VB
       showScatter3.disable = false
       hide3.disable = true
     }
+
+    // align and style components
     slot1Container.alignment = Pos.Center
     butContainer1R1.alignment = Pos.Center
     butContainer1R2.alignment = Pos.Center
@@ -210,16 +211,17 @@ class Diagram(data: Seq[Tuple4[String, Int, Int, Int]], date: String) extends VB
     butContainer3R2.spacing = 5
     //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+    // create shadow effect
     val dropShadow = new DropShadow()
     dropShadow.setRadius(5.0)
     dropShadow.setSpread(0)
     dropShadow.setOffsetX(0.0)
     dropShadow.setOffsetY(1.0)
     dropShadow.setColor(Color.color(0, 0, 0, 0.20))
-
     val clearShadow = new DropShadow()
     clearShadow.setColor(Color.color(0, 0, 0, 0))
 
+    // style and set event handler for hide-show buttons
     hideButton.setBackground(new Background(Array(new BackgroundFill(Color.White, new CornerRadii(0), Insets(0)))))
     hideButton.setTextFill(Color.Black)
     hideButton.setFont(Font.font("", FontWeight.Bold, 10))
@@ -254,6 +256,7 @@ class Diagram(data: Seq[Tuple4[String, Int, Int, Int]], date: String) extends VB
 }
 
 class PieChartModel(data: Seq[Tuple4[String, Int, Int, Int]]) extends VBox {
+  // Create pie chart model
   val sumCases = data.map(_._2).sum
   var sumDeath = data.map(_._3).sum
   var note = new Label("")
@@ -263,8 +266,8 @@ class PieChartModel(data: Seq[Tuple4[String, Int, Int, Int]]) extends VBox {
     )
   var total: Double = _
   val pie: PieChart = new PieChart()
-
   this.children = pie
+
   pie.setTitle("Pie Chart")
   pie.setData(pieChartData)
   pie.setPrefHeight(400)
@@ -287,6 +290,7 @@ class PieChartModel(data: Seq[Tuple4[String, Int, Int, Int]]) extends VBox {
       var pieValue = d.getPieValue
       val percent = (pieValue/total)*100.0
       val msg = "%s: %.2f (%.2f%%)".format(d.getName, pieValue, percent)
+      // Show tooltip when hovered
       val tt = new Tooltip {
         text = msg
         showDelay = Duration(0)
@@ -296,6 +300,7 @@ class PieChartModel(data: Seq[Tuple4[String, Int, Int, Int]]) extends VBox {
 }
 
 class ColumnPlotModel(data: Seq[Tuple4[String, Int, Int, Int]]) extends VBox {
+  // Create column chart model
   val sumCasesArr = data.map(_._2)
   val sumDeathsArr = data.map(_._3)
   val datesArr = ObservableBuffer() ++ data.map(_._1).map(i => i.substring(0, 6) + i.substring(8, 10))
@@ -337,6 +342,7 @@ class ColumnPlotModel(data: Seq[Tuple4[String, Int, Int, Int]]) extends VBox {
           val barNode:Node = i.getNode
           var barValue:Double = i.getYValue.toString.toDouble
           val msg = "%s: %.2f".format(d.getName, barValue)
+          // Tooltip installing
           val tt = new Tooltip {
             text = msg
             showDelay = Duration(0)
@@ -359,10 +365,10 @@ class ColumnPlotModel(data: Seq[Tuple4[String, Int, Int, Int]]) extends VBox {
 }
 
 class ScatterPlotModel(data: Seq[Tuple4[String, Int, Int, Int]]) extends VBox {
+  // Create scatter chart model
   val sumCasesArr = data.map(_._2)
   val sumDeathsArr = data.map(_._3)
   val datesArr = ObservableBuffer() ++ data.map(_._1).map(i => i.substring(0, 6) + i.substring(8, 10))
-  // val datesArr =ObservableBuffer("F1", "F2", "F3", "F4", "F5", "F6", "F7") 01/02/0220
 
   val xAxis = new CategoryAxis()
   xAxis.setCategories(datesArr)
@@ -400,6 +406,7 @@ class ScatterPlotModel(data: Seq[Tuple4[String, Int, Int, Int]]) extends VBox {
           val barNode:Node = i.getNode
           var barValue:Double = i.getYValue.toString.toDouble
           val msg = "%s: %.2f".format(d.getName, barValue)
+          // Tooltip installing
           val tt = new Tooltip {
             text = msg
             showDelay = Duration(0)
@@ -422,6 +429,7 @@ class ScatterPlotModel(data: Seq[Tuple4[String, Int, Int, Int]]) extends VBox {
 }
 
 class ControlContainer extends VBox {
+  // style Diagram Controller
   val dropShadow = new DropShadow()
   dropShadow.setRadius(5.0)
   dropShadow.setSpread(0)
@@ -436,6 +444,7 @@ class ControlContainer extends VBox {
 }
 
 class SlotCard(title: String) extends VBox {
+  // style slot container for Diagram Controller
   val dropShadow = new DropShadow()
   dropShadow.setRadius(5.0)
   dropShadow.setSpread(0)
@@ -449,6 +458,7 @@ class SlotCard(title: String) extends VBox {
 }
 
 class CustomButton(title: String) extends Button {
+  // create a custom button for Diagram Controller
   val dropShadow = new DropShadow()
   dropShadow.setRadius(5.0)
   dropShadow.setSpread(0)
@@ -475,6 +485,7 @@ class CustomButton(title: String) extends Button {
 }
 
 class CustomHideButton extends Button {
+  // create a custom hide diagram button for Diagram Controller
   this.setText("Hide chart")
   val dropShadow = new DropShadow()
   dropShadow.setRadius(5.0)
